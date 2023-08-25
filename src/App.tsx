@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CurrentUser, CurrentUserContext } from "./contexts/CurrentUserContext";
+import { FC, useState } from "react";
+import TodoList from "./pages/TodoList";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: FC = () => {
+  const [currentUser, setCurrentUser] = useState<CurrentUser>({
+    id: "",
+    firstname: "",
+    lastname: "",
+  });
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="App">
+      <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={<TodoList />}
+            />
+            <Route
+              path="/auth"
+              element={<Auth />}
+            />
+            <Route
+              path="/profile"
+              element={<Profile />}
+            />
+            <Route
+              path="*"
+              element={<NotFound />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </CurrentUserContext.Provider>
+    </div>
+  );
+};
 
-export default App
+export default App;

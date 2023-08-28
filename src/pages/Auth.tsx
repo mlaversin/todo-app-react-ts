@@ -8,66 +8,30 @@ import SignUpForm from "../components/forms/SignUpForm";
  */
 export default function Auth() {
   const [loginForm, setLoginForm] = useState(true);
-  const [signUpForm, setSignUpForm] = useState(false);
-  const [register, setRegister] = useState(false);
 
-  const handleForms = (e) => {
-    if (e.target.id === "signup") {
-      setSignUpForm(true);
-      setLoginForm(false);
-    } else {
-      setSignUpForm(false);
-      setLoginForm(true);
-    }
+  const toggleForms = () => {
+    setLoginForm(!loginForm);
   };
 
   return (
     <>
       <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
-        <div className="text-center">
+        <div className="text-center min-w-[40%]">
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            Authentication
+            Welcome
           </h1>
-          <ul>
-            <li
-              id="login"
-              className={`login-tab ${loginForm ? "active" : null}`}
-              onClick={handleForms}
-            >
-              Se connecter
-            </li>
-            <li
-              id="signup"
-              className={`signup-tab ${signUpForm ? "active" : null}`}
-              onClick={handleForms}
-            >
-              S'inscrire
-            </li>
-          </ul>
 
-          {register && (
-            <div className="success-message">
-              <p>Votre compte a été créé. Merci de vous connecter.</p>
-              <button
-                className="btn"
-                onClick={() => setRegister(false)}
-              >
-                x
-              </button>
-            </div>
-          )}
-          <div className="auth-modal">
-            <div className="auth-modal-container">
-              {loginForm && <LoginForm />}
-              {signUpForm && (
-                <SignUpForm
-                  setRegister={setRegister}
-                  setSignUpForm={setSignUpForm}
-                  setLoginForm={setLoginForm}
-                />
-              )}
-            </div>
-          </div>
+          <div>{loginForm ? <LoginForm /> : <SignUpForm />}</div>
+
+          <p className="text-center text-sm text-gray-500">
+            {loginForm ? "Not a member? " : "Already member? "}
+            <a
+              onClick={toggleForms}
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 cursor-pointer"
+            >
+              {loginForm ? "Create Account" : "Sign in"}
+            </a>
+          </p>
         </div>
       </main>
     </>

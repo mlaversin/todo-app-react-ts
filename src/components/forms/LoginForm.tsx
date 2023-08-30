@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
-import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import { useState } from "react";
+import { useContext } from "react";
+import { AuthUserContext } from "../../contexts/AuthUserContext";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -9,8 +10,9 @@ import * as Yup from "yup";
  * on the authentication page
  */
 export default function LoginForm() {
-  const { setCurrentUser } = useContext(CurrentUserContext);
+  const authUserContext = useContext(AuthUserContext);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -24,9 +26,7 @@ export default function LoginForm() {
     password: "",
   };
 
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: object) => {
     fetch(`${import.meta.env.VITE_API_URL}/user/login`, {
       method: "POST",
       headers: {
@@ -38,11 +38,13 @@ export default function LoginForm() {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("userId", JSON.stringify(res.userId));
+          localStorage.setItem("email", JSON.stringify(res.email));
           localStorage.setItem("firstname", JSON.stringify(res.firstname));
           localStorage.setItem("lastname", JSON.stringify(res.lastname));
           localStorage.setItem("token", JSON.stringify(res.token));
-          setCurrentUser({
+          authUserContext?.setAuthUser({
             id: res.userId,
+            email: res.email,
             firstname: res.firstname,
             lastname: res.lastname,
           });

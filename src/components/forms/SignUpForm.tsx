@@ -33,7 +33,7 @@ export default function SignUpForm() {
   };
 
   const handleSubmit = (values) => {
-    fetch(`http://localhost:3000/api/user/signup`, {
+    fetch(`${import.meta.env.VITE_API_URL}/user/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
